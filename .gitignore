@@ -61,7 +61,6 @@ modules.builtin
 /Module.markers
 /KernelSU
 /anykernel
-/drivers/kernelsu
 
 #
 # RPM spec file (make rpm-pkg)
