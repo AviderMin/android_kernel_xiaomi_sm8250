@@ -43,6 +43,7 @@
 *.tar
 *.xz
 *.zip
+*Zone.Identifier
 Module.symvers
 modules.builtin
 
