@@ -68,6 +68,7 @@ echo "Cleaning..."
 rm -rf out/
 rm -rf anykernel/
 rm -rf KernelSU/
+rm -rf drivers/kernelsu
 
 KSU_ZIP_STR=NoKernelSU
 if [ "$2" == "ksu" ]; then
