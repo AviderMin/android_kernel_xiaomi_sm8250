@@ -42,6 +42,8 @@
 *.tab.[ch]
 *.tar
 *.xz
+*.zip
+*Zone.Identifier
 Module.symvers
 modules.builtin
 
@@ -57,6 +59,8 @@ modules.builtin
 /vmlinuz
 /System.map
 /Module.markers
+/KernelSU
+/anykernel
 
 #
 # RPM spec file (make rpm-pkg)
