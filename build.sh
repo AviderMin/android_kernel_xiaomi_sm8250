@@ -41,7 +41,7 @@ export CXX="ccache g++"
 export PATH="/usr/lib/ccache:$PATH"
 echo "CCACHE_DIR: [$CCACHE_DIR]"
 
-MAKE_ARGS="ARCH=arm64 SUBARCH=arm64 O=out CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- CLANG_TRIPLE=aarch64-linux-gnu-"
+MAKE_ARGS="ARCH=arm64 SUBARCH=arm64 O=out LLVM=1 LLVM_IAS=0 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- CLANG_TRIPLE=aarch64-linux-gnu-"
 
 if [ "$1" == "j1" ]; then
     make $MAKE_ARGS -j1
@@ -64,10 +64,16 @@ fi
 echo "[clang --version]:"
 clang --version
 
+echo "Cleaning..."
+rm -rf out/
+rm -rf anykernel/
+rm -rf KernelSU/
+rm -rf drivers/kernelsu
+
 KSU_ZIP_STR=NoKernelSU
 if [ "$2" == "ksu" ]; then
     KSU_ENABLE=1
-    KSU_ZIP_STR=SukiSU-SUSFS
+    KSU_ZIP_STR=SukiSU
 else
     KSU_ENABLE=0
 fi
@@ -76,14 +82,11 @@ echo "TARGET_DEVICE: $TARGET_DEVICE"
 
 if [ $KSU_ENABLE -eq 1 ]; then
     echo "KSU is enabled"
-    curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s susfs-main
+    curl -LSs "https://raw.githubusercontent.com/ShirkNeko/SukiSU-Ultra/main/kernel/setup.sh" | bash -s nongki
 else
     echo "KSU is disabled"
 fi
 
-echo "Cleaning..."
-rm -rf out/
-rm -rf anykernel/
 
 echo "Clone AnyKernel3 for packing kernel (repo: https://github.com/liyafe1997/AnyKernel3)"
 git clone https://github.com/liyafe1997/AnyKernel3 -b kona --single-branch --depth=1 anykernel
@@ -91,7 +94,6 @@ git clone https://github.com/liyafe1997/AnyKernel3 -b kona --single-branch --dep
 # Add date to local version
 local_version_str="-perf"
 local_version_date_str="-Nijika-v1.5-$(date +%Y%m%d)"
-touch .scmversion
 
 sed -i "s/${local_version_str}/${local_version_date_str}/g" arch/arm64/configs/${TARGET_DEVICE}_defconfig
 
@@ -105,23 +107,7 @@ make $MAKE_ARGS ${TARGET_DEVICE}_defconfig
 if [ $KSU_ENABLE -eq 1 ]; then
     scripts/config --file out/.config \
     -e KSU \
-    -e KSU_MANUAL_HOOK \
-    -e KSU_SUSFS_HAS_MAGIC_MOUNT \
-    -d KSU_SUSFS_SUS_PATH \
-    -e KSU_SUSFS_SUS_MOUNT \
-    -e KSU_SUSFS_AUTO_ADD_SUS_KSU_DEFAULT_MOUNT \
-    -e KSU_SUSFS_AUTO_ADD_SUS_BIND_MOUNT \
-    -e KSU_SUSFS_SUS_KSTAT \
-    -d KSU_SUSFS_SUS_OVERLAYFS \
-    -e KSU_SUSFS_TRY_UMOUNT \
-    -e KSU_SUSFS_AUTO_ADD_TRY_UMOUNT_FOR_BIND_MOUNT \
-    -e KSU_SUSFS_SPOOF_UNAME \
-    -e KSU_SUSFS_ENABLE_LOG \
-    -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
-    -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
-    -d KSU_SUSFS_OPEN_REDIRECT \
-    -d KSU_SUSFS_SUS_SU \
-    -e KPM
+    -e KSU_MANUAL_HOOK 
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -153,7 +139,7 @@ scripts/config --file out/.config \
     -e PERF_HELPER \
     -e BOOTUP_RECLAIM \
     -e MI_RECLAIM \
-    -e RTMM \
+    -e RTMM 
 
 make $MAKE_ARGS -j$(nproc)
 
@@ -170,16 +156,6 @@ find out/arch/arm64/boot/dts -name '*.dtb' -exec cat {} + >out/arch/arm64/boot/d
 rm -rf anykernel/kernels/
 mkdir -p anykernel/kernels/
 
-# Patch for SukiSU KPM support. 
-if [ $KSU_ENABLE -eq 1 ]; then
-    cd out/arch/arm64/boot/
-    wget https://github.com/SukiSU-Ultra/SukiSU_KernelPatch_patch/releases/download/0.12.1/patch_linux
-    chmod +x patch_linux
-    ./patch_linux
-    rm Image
-    mv oImage Image
-    cd -
-fi
 
 cp out/arch/arm64/boot/Image anykernel/kernels/
 cp out/arch/arm64/boot/dtb anykernel/kernels/
