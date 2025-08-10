@@ -137,8 +137,7 @@ if [ $KSU_ENABLE -eq 1 ]; then
     -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
     -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
     -e KSU_SUSFS_OPEN_REDIRECT \
-    -e KSU_SUSFS_SUS_SU \
-    -e KPM
+    -e KSU_SUSFS_SUS_SU 
 else
     scripts/config --file out/.config -d KSU
 fi
@@ -264,8 +263,7 @@ if [ $KSU_ENABLE -eq 1 ]; then
     -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
     -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG \
     -e KSU_SUSFS_OPEN_REDIRECT \
-    -e KSU_SUSFS_SUS_SU \
-    -e KPM
+    -e KSU_SUSFS_SUS_SU 
 else
     scripts/config --file out/.config -d KSU
 fi
