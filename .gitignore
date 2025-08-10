@@ -42,8 +42,11 @@
 *.tab.[ch]
 *.tar
 *.xz
+<<<<<<< HEAD
 *.zip
 *Zone.Identifier
+=======
+>>>>>>> parent of f223a2f8dc9c (remove sukisu for pure)
 Module.symvers
 modules.builtin
 
@@ -59,9 +62,6 @@ modules.builtin
 /vmlinuz
 /System.map
 /Module.markers
-/KernelSU
-/drivers/kernelsu
-/anykernel
 
 #
 # RPM spec file (make rpm-pkg)
