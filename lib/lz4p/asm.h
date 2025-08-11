@@ -74,7 +74,7 @@
 	.align FALIGN
 	.globl _$0
 	_$0 :
-.endm
+.endmacro
 
 .macro ENTRY2
 	.align FALIGN
@@ -82,37 +82,37 @@
 	.globl _$1
 	_$0 :
 	_$1 :
-.endm
+.endmacro
 
 .macro READ_THREAD
 	mrs $0, TPIDR_EL1
-.endm
+.endmacro
 
 .macro BRANCH_EXTERN
 	b _$0
-.end
+.endmacro
 
 .macro CALL_EXTERN
 	bl _$0
-.endm
+.endmacro
 
 .macro MOV64
 	movk $0, #((($1) >> 48) & 0x000000000000FFFF), lsl #48
 	movk $0, #((($1) >> 32) & 0x000000000000FFFF), lsl #32
 	movk $0, #((($1) >> 16) & 0x000000000000FFFF), lsl #16
 	movk $0, #((($1) >> 00) & 0x000000000000FFFF), lsl #00
-.endm
+.endmacro
 
 .macro MOV32
 	movz $0, #((($1) >> 16) & 0x000000000000FFFF), lsl #16
 	movk $0, #((($1) >> 00) & 0x000000000000FFFF), lsl #00
-.endm
+.endmacro
 
 .macro ARM64_STACK_PROLOG
 #if __has_feature(ptrauth_returns)
 	pacibsp
 #endif
-
+.endmacro
 
 .macro ARM64_STACK_EPILOG
 #if __has_feature(ptrauth_returns)
@@ -120,7 +120,7 @@
 #else
 	ret
 #endif
-.endm
+.endmacro
 
 #define PUSH_FRAME			\
 	stp fp, lr, [sp, #-16]!		%% \
@@ -135,7 +135,7 @@
 #ifdef XNU_KERNEL_PRIVATE
 .macro PANIC_UNIMPLEMENTED
 	bl EXT(panic_unimplemented)
-.endm
+.endmacro
 #endif
 
 #else /* NOT __ASSEMBLER__ */

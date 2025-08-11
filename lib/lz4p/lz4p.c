@@ -161,7 +161,6 @@ static void lz4p_exit(void)
 	crypto_unregister_scomp(&scomp);
 }
 
-
 subsys_initcall(lz4p_init);
 module_exit(lz4p_exit);
 
