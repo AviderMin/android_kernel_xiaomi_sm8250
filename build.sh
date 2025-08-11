@@ -131,7 +131,6 @@ ${CLANG_PATH} --version
 if ! $NO_CLEAN; then
     color_echo "$yellow" "清理工作区..."
     rm -rf out/
-    make clean
 else
     color_echo "$yellow" "跳过清理步骤..."
 fi
