@@ -67,7 +67,7 @@ clang --version
 echo "Cleaning..."
 rm -rf out/
 
-KSU_ZIP_STR=SU
+KSU_ZIP_STR=SukiSU-SuSFS
 
 echo "TARGET_DEVICE: $TARGET_DEVICE"
 

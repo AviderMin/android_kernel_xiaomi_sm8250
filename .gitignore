@@ -60,6 +60,7 @@ modules.builtin
 /System.map
 /Module.markers
 /KernelSU
+/anykernel
 
 #
 # RPM spec file (make rpm-pkg)
