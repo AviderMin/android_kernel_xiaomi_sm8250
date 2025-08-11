@@ -147,7 +147,7 @@ make $MAKE_ARGS "${TARGET_DEVICE}_defconfig"
 
 # 根据 KSU 启用/禁用配置
 if $USE_KSU; then
-    color_echo "$green" "启用 KSU..."
+    color_echo "$green" "启用 KernelSU..."
     ./scripts/config --file out/.config \
         -e KSU \
         -e KSU_MANUAL_HOOK \
