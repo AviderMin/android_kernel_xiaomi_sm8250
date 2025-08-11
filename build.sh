@@ -165,7 +165,7 @@ if $USE_KSU; then
         -e KSU_SUSFS_HIDE_KSU_SUSFS_SYMBOLS \
         -e KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG
 else
-    color_echo "$yellow" "禁用 KSU..."
+    color_echo "$yellow" "禁用 KernelSU..."
     ./scripts/config --file out/.config \
         -d KSU \
         -d KSU_MANUAL_HOOK \
