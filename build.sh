@@ -21,6 +21,8 @@ set -e
 
 # 参数处理
 TARGET_DEVICE=""
+KERNEL_NAME="Nijika"
+KERNEL_VERSION="v1.6"
 USE_KSU=true       # 默认启用 KSU
 CCACHE_ENABLED=true
 NO_CLEAN=false
@@ -120,8 +122,8 @@ if [[ ! -f "arch/arm64/configs/${TARGET_DEVICE}_defconfig" ]]; then
 fi
 
 # 显示环境信息
-color_echo "$blue" "目标设备: $TARGET_DEVICE"
-color_echo "$blue" "编译选项: $MAKE_FLAGS"
+color_echo "$yellow" "目标设备: $TARGET_DEVICE"
+color_echo "$yellow" "编译选项: $MAKE_FLAGS"
 
 color_echo "$green" "[clang 版本信息]:"
 ${CLANG_PATH} --version
@@ -137,7 +139,7 @@ fi
 
 # 添加日期到本地版本
 LOCAL_VERSION_STR="-perf"
-LOCAL_VERSION_DATE="-Nijika-v1.5-$(date +%Y%m%d)"
+LOCAL_VERSION_DATE="-${KERNEL_NAME}-${KERNEL_VERSION}-$(date +%Y%m%d)"
 
 sed -i "s/${LOCAL_VERSION_STR}/${LOCAL_VERSION_DATE}/g" "arch/arm64/configs/${TARGET_DEVICE}_defconfig"
 
@@ -233,9 +235,8 @@ cp "$IMAGE_PATH" anykernel/kernels/
 cp "$DTB_PATH" anykernel/kernels/
 
 # 创建ZIP文件名
-KSU_STR=$($USE_KSU && echo "SU" || echo "NSU")
-GIT_COMMIT_ID=$(git rev-parse --short HEAD 2>/dev/null || echo "nogit")
-ZIP_NAME="Kernel_HyperOS_${TARGET_DEVICE}_${KSU_STR}_$(date +'%Y%m%d_%H%M%S')_${GIT_COMMIT_ID}.zip"
+KSU_STR=$($USE_KSU && echo "SU" || echo "NoSU")
+ZIP_NAME="${TARGET_DEVICE}_${KERNEL_NAME}-${KERNEL_VERSION}_${KSU_STR}_$(date +'%Y%m%d_%H%M%S').zip"
 
 color_echo "$green" "创建刷机包: $ZIP_NAME"
 (cd anykernel && zip -r9 "$ZIP_NAME" ./* -x .git .gitignore out/ ./*.zip)
