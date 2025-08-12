@@ -59,7 +59,6 @@ modules.builtin
 /vmlinuz
 /System.map
 /Module.markers
-/KernelSU
 
 #
 # RPM spec file (make rpm-pkg)
